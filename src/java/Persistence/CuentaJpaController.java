@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package PERSISTENCIA;
 
-import LOGICA.Empleado;
+package Persistence;
+
+import Logic.Cuenta;
 import PERSISTENCIA.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import java.util.List;
@@ -17,30 +13,28 @@ import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-/**
- *
- * @author Alberto
- */
-public class EmpleadoJpaController implements Serializable {
 
-    public EmpleadoJpaController(EntityManagerFactory emf) {
+public class CuentaJpaController implements Serializable {
+
+    public CuentaJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
-    public EmpleadoJpaController() {
-        emf = Persistence.createEntityManagerFactory("CrudBasicPU");
-    }
     
+    public CuentaJpaController() {
+         emf = Persistence.createEntityManagerFactory("CrudBasicPU");
+    }
+
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
-    public void create(Empleado empleado) {
+    public void create(Cuenta cuenta) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(empleado);
+            em.persist(cuenta);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -49,19 +43,19 @@ public class EmpleadoJpaController implements Serializable {
         }
     }
 
-    public void edit(Empleado empleado) throws NonexistentEntityException, Exception {
+    public void edit(Cuenta cuenta) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            empleado = em.merge(empleado);
+            cuenta = em.merge(cuenta);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                int id = empleado.getId();
-                if (findEmpleado(id) == null) {
-                    throw new NonexistentEntityException("The empleado with id " + id + " no longer exists.");
+                int id = cuenta.getIdCuenta();
+                if (findCuenta(id) == null) {
+                    throw new NonexistentEntityException("The cuenta with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -77,14 +71,14 @@ public class EmpleadoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Empleado empleado;
+            Cuenta cuenta;
             try {
-                empleado = em.getReference(Empleado.class, id);
-                empleado.getId();
+                cuenta = em.getReference(Cuenta.class, id);
+                cuenta.getIdCuenta();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The empleado with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The cuenta with id " + id + " no longer exists.", enfe);
             }
-            em.remove(empleado);
+            em.remove(cuenta);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -93,19 +87,19 @@ public class EmpleadoJpaController implements Serializable {
         }
     }
 
-    public List<Empleado> findEmpleadoEntities() {
-        return findEmpleadoEntities(true, -1, -1);
+    public List<Cuenta> findCuentaEntities() {
+        return findCuentaEntities(true, -1, -1);
     }
 
-    public List<Empleado> findEmpleadoEntities(int maxResults, int firstResult) {
-        return findEmpleadoEntities(false, maxResults, firstResult);
+    public List<Cuenta> findCuentaEntities(int maxResults, int firstResult) {
+        return findCuentaEntities(false, maxResults, firstResult);
     }
 
-    private List<Empleado> findEmpleadoEntities(boolean all, int maxResults, int firstResult) {
+    private List<Cuenta> findCuentaEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Empleado.class));
+            cq.select(cq.from(Cuenta.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -117,20 +111,20 @@ public class EmpleadoJpaController implements Serializable {
         }
     }
 
-    public Empleado findEmpleado(int id) {
+    public Cuenta findCuenta(int id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Empleado.class, id);
+            return em.find(Cuenta.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getEmpleadoCount() {
+    public int getCuentaCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Empleado> rt = cq.from(Empleado.class);
+            Root<Cuenta> rt = cq.from(Cuenta.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

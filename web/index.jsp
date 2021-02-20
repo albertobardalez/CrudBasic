@@ -1,5 +1,3 @@
-
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -8,11 +6,13 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello Wilber!</h1>
-        <form action="CrearCuenta" method="GET">
-            <button type="submit">Enviar</button>
-            
-        </form>
+        
+        <div>
+            <a href="crearCuenta.jsp" style="text-decoration: none">Crear cuenta</a><br>
+            <a href="GetCuenta" style="text-decoration: none" >Listado de  Cuentas</a><br>
+            <a href="crearEmpleado.jsp" style="text-decoration: none">Crear Empleado</a><br>
+            <a href="listaEmpleado.jsp" style="text-decoration: none">Listado de  Empleado</a>
+        </div>
         
         
     </body>

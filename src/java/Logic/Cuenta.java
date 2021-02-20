@@ -1,5 +1,5 @@
 
-package LOGICA;
+package Logic;
 
 import java.io.Serializable;
 import javax.persistence.Basic;

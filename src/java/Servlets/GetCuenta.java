@@ -4,45 +4,56 @@ package Servlets;
 import Logic.Controladora;
 import Logic.Cuenta;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
-@WebServlet(name = "CrearCuenta", urlPatterns = {"/CrearCuenta"})
-public class CrearCuenta extends HttpServlet {
+@WebServlet(name = "GetCuenta", urlPatterns = {"/GetCuenta"})
+public class GetCuenta extends HttpServlet {
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+       
     }
+
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-              
-        Controladora control = new Controladora();     
-        Cuenta cuenta1 = new Cuenta();
-        /*cuenta1.setUsuario("Exito, ");
-        cuenta1.setContrasenia("25548");
-        control.crearCuenta(cuenta1);
-        response.sendRedirect("index.jsp");*/
+        processRequest(request, response);
         
-        String user = request.getParameter("name");
-        String pass = request.getParameter("pass");
+        HttpSession mySession = request.getSession(true);
         
-        cuenta1.setUsuario(user);
-        cuenta1.setContrasenia(pass);
+        Controladora control = new Controladora();
         
-        control.crearCuenta(cuenta1); //--> se comunica con la BD el control
         
-        response.sendRedirect("index.jsp");
-         
-    }    
+        List<Cuenta>listaCuenta = control.getCuenta();
+        mySession.setAttribute("Cuenta", listaCuenta);
+        
+        
+        
+        
+        response.sendRedirect("listaCuenta.jsp");
+        
+        
+        
+        
+    }
+
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-    }    @Override
+    }
+
+    @Override
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
